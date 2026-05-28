@@ -25,6 +25,13 @@ Extensão para Chrome/Edge que adiciona controles adicionais a vídeos do Instag
 - As teclas `ArrowLeft` / `ArrowRight` fazem seek de 5s.
 - O botão de velocidade alterna entre vários valores.
 
+## Atalhos de teclado
+
+- `ArrowLeft` — retrocede 5 segundos no vídeo.
+- `ArrowRight` — avança 5 segundos no vídeo.
+- `M` — ativa/desativa o som do vídeo.
+- `F` — entra/sai do modo fullscreen.
+
 ## Arquivos
 
 - `content.js` - lógica principal de injeção e controle de vídeos.

@@ -1,0 +1,218 @@
+/* Instagram Video Controls - styles.css */
+
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@700&family=DM+Sans:wght@400;500&display=swap');
+
+/* ── Overlay container ────────────────────────────────────────────────────── */
+.igvc-overlay {
+  position: fixed;
+  z-index: 2147483647;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-end;
+  gap: 8px;
+  padding: 10px 12px 10px;
+  box-sizing: border-box;
+  background: linear-gradient(to top, rgba(0,0,0,0.82) 0%, rgba(0,0,0,0.0) 100%);
+  border-radius: 0 0 12px 12px;
+  opacity: 0;
+  transition: opacity 0.22s ease;
+  pointer-events: none;
+}
+
+.igvc-overlay > .igvc-progress-wrap {
+  width: 100%;
+  justify-content: flex-end;
+}
+
+.igvc-overlay > .igvc-btn {
+  margin-right: 8px;
+}
+
+.igvc-overlay > .igvc-btn:last-of-type {
+  margin-right: 0;
+}
+
+.igvc-overlay--visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.igvc-overlay .igvc-btn,
+.igvc-overlay .igvc-progress-bar,
+.igvc-overlay .igvc-feedback {
+  pointer-events: all;
+}
+
+/* ── Buttons ──────────────────────────────────────────────────────────────── */
+.igvc-btn {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 4px;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  color: #fff;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.1s ease;
+  user-select: none;
+  white-space: nowrap;
+}
+
+.igvc-btn:hover {
+  background: rgba(255, 255, 255, 0.30);
+  transform: scale(1.06);
+}
+
+.igvc-btn:active {
+  transform: scale(0.96);
+}
+
+.igvc-icon {
+  font-size: 15px;
+  line-height: 1;
+}
+
+.igvc-label {
+  font-size: 11px;
+  letter-spacing: 0.02em;
+}
+
+/* ── Progress bar ─────────────────────────────────────────────────────────── */
+.igvc-progress-wrap {
+  width: 100%;
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.igvc-progress-bar {
+  flex: 1;
+  height: 10px;
+  background: rgba(255,255,255,0.25);
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  transition: height 0.15s;
+}
+
+.igvc-progress-bar:hover {
+  height: 12px;
+}
+
+.igvc-overlay:not(.igvc-overlay--fullscreen) .igvc-progress-bar {
+  height: 12px;
+}
+
+.igvc-overlay:not(.igvc-overlay--fullscreen) .igvc-progress-bar:hover {
+  height: 14px;
+}
+
+.igvc-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #ff6b6b, #feca57);
+  border-radius: 4px;
+  width: 0%;
+  position: relative;
+  transition: width 0.1s linear;
+}
+
+.igvc-progress-handle {
+  position: fixed;
+  right: -6px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 14px;
+  height: 14px;
+  background: #fff;
+  border-radius: 50%;
+  box-shadow: 0 0 6px rgba(0,0,0,0.35);
+  opacity: 0;
+  transition: opacity 0.15s, transform 0.15s ease;
+}
+
+.igvc-progress-bar:hover .igvc-progress-handle {
+  opacity: 1;
+  transform: translateY(-50%) scale(1.1);
+}
+
+/* ── Time display ─────────────────────────────────────────────────────────── */
+.igvc-time {
+  display: inline-block;
+  font-family: 'DM Sans', monospace;
+  font-size: 11px;
+  color: rgba(255,255,255,0.8);
+  white-space: nowrap;
+  letter-spacing: 0.03em;
+}
+
+/* ── Non-fullscreen simplified overlay ─────────────────────────────────────── */
+.igvc-overlay:not(.igvc-overlay--fullscreen) {
+  background: transparent;
+  padding: 14px 18px;
+  justify-content: flex-end;
+  gap: 18px;
+}
+
+.igvc-overlay:not(.igvc-overlay--fullscreen) .igvc-btn {
+  padding: 10px 18px;
+  font-size: 15px;
+}
+
+.igvc-overlay:not(.igvc-overlay--fullscreen) .igvc-icon {
+  font-size: 19px;
+}
+
+/* ── Fullscreen mode ──────────────────────────────────────────────────────── */
+:fullscreen .igvc-overlay,
+:-webkit-full-screen .igvc-overlay {
+  border-radius: 0;
+}
+
+.igvc-overlay--fullscreen {
+  position: absolute !important;
+  left: 0 !important;
+  top: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  border-radius: 0 !important;
+  z-index: 2147483647 !important;
+  opacity: 1 !important;
+  pointer-events: all !important;
+  transform: none !important;
+}
+.igvc-feedback {
+  position: fixed;
+  top: -44px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0,0,0,0.65);
+  color: #fff;
+  font-family: 'Syne', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  padding: 6px 16px;
+  border-radius: 30px;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+  pointer-events: none;
+  backdrop-filter: blur(4px);
+}
+
+.igvc-feedback--show {
+  opacity: 1;
+  animation: igvc-pop 0.6s ease forwards;
+}
+
+@keyframes igvc-pop {
+  0%   { opacity: 1; transform: translateX(-50%) scale(0.9); }
+  40%  { opacity: 1; transform: translateX(-50%) scale(1.05); }
+  100% { opacity: 0; transform: translateX(-50%) scale(1); }
+}

@@ -195,25 +195,19 @@ function bindControls(overlay, video) {
 
   const onFullscreenChange = () => {
     updateFsIcon();
-    if (document.fullscreenElement) {
-      const fsEl = document.fullscreenElement;
-      const fsVideo = fsEl.tagName === 'VIDEO' ? fsEl
-        : fsEl.querySelector('video') || video;
-      currentVideo = fsVideo;
-      if (getComputedStyle(fsEl).position === 'static') {
-        fsEl.style.position = 'relative';
-      }
-      fsEl.appendChild(overlay);
-      overlay.style.position = 'absolute';
+    const fsEl = document.fullscreenElement;
+    if (fsEl) {
+      // Coloca o overlay no body com position fixed cobrindo a tela toda —
+      // sem tocar no layout do elemento fullscreen do Instagram
+      document.body.appendChild(overlay);
+      overlay.style.position = 'fixed';
       overlay.style.left   = '0';
       overlay.style.top    = '0';
-      overlay.style.width  = '100%';
-      overlay.style.height = '100%';
+      overlay.style.width  = '100vw';
+      overlay.style.height = '100vh';
       overlay.classList.add('igvc-overlay--fullscreen');
       showOverlay(overlay);
     } else {
-      overlay.style.position = 'fixed';
-      document.body.appendChild(overlay);
       overlay.classList.remove('igvc-overlay--fullscreen');
       setTimeout(() => positionOverlay(overlay, video), 150);
     }

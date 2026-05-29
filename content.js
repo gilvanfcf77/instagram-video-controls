@@ -5,6 +5,7 @@ const SKIP_SECONDS = 5;
 let currentVideo = null;
 let currentControls = null;
 let hideTimeout = null;
+let currentCleanup = null; // guarda função de limpeza do vídeo atual
 
 // ─── Cria o painel de controles ───────────────────────────────────────────────
 function createControls() {
@@ -190,7 +191,7 @@ function bindControls(overlay, video) {
     }
   }));
 
-  document.addEventListener('fullscreenchange', () => {
+  const onFullscreenChange = () => {
     updateFsIcon();
     if (document.fullscreenElement) {
       // Move o overlay para dentro do elemento fullscreen —
@@ -214,7 +215,8 @@ function bindControls(overlay, video) {
       overlay.classList.remove('igvc-overlay--fullscreen');
       setTimeout(() => positionOverlay(overlay, video), 150);
     }
-  });
+  };
+  document.addEventListener('fullscreenchange', onFullscreenChange);
 
   // Barra de progresso
   let dragging = false;
@@ -253,6 +255,10 @@ function bindControls(overlay, video) {
 
   bar.addEventListener('pointerup', stopDrag);
   bar.addEventListener('pointercancel', stopDrag);
+
+  return () => {
+    document.removeEventListener('fullscreenchange', onFullscreenChange);
+  };
 }
 
 function showSkipFeedback(overlay, text) {
@@ -272,20 +278,26 @@ function showSkipFeedback(overlay, text) {
 function attachOverlay(video) {
   if (currentVideo === video && currentControls) return;
 
+  // Remove listeners do vídeo anterior antes de criar novos
+  if (currentCleanup) {
+    currentCleanup();
+    currentCleanup = null;
+  }
+
   currentVideo = video;
   if (currentControls) currentControls.remove();
 
   const overlay = createControls();
-  bindControls(overlay, video);
+  const cleanupBindings = bindControls(overlay, video);
 
   document.body.appendChild(overlay);
   currentControls = overlay;
 
   positionOverlay(overlay, video);
-  window.addEventListener('scroll', () => positionOverlay(overlay, video), true);
-  window.addEventListener('resize', () => positionOverlay(overlay, video));
 
-  document.addEventListener('mousemove', (e) => {
+  const onScroll = () => positionOverlay(overlay, video);
+  const onResize = () => positionOverlay(overlay, video);
+  const onMouseMove = (e) => {
     const rect = video.getBoundingClientRect();
     const insideVideo =
       e.clientX >= rect.left && e.clientX <= rect.right &&
@@ -297,9 +309,21 @@ function attachOverlay(video) {
     } else {
       scheduleHide(overlay);
     }
-  });
+  };
 
+  window.addEventListener('scroll', onScroll, true);
+  window.addEventListener('resize', onResize);
+  document.addEventListener('mousemove', onMouseMove);
   document.addEventListener('keydown', handleKeyDown);
+
+  // Limpa todos os listeners quando trocar de vídeo
+  currentCleanup = () => {
+    window.removeEventListener('scroll', onScroll, true);
+    window.removeEventListener('resize', onResize);
+    document.removeEventListener('mousemove', onMouseMove);
+    document.removeEventListener('keydown', handleKeyDown);
+    if (cleanupBindings) cleanupBindings();
+  };
 }
 
 function showOverlay(overlay) {

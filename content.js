@@ -185,7 +185,9 @@ function bindControls(overlay, video) {
 
   fsBtn.addEventListener('pointerdown', handle(() => {
     if (!document.fullscreenElement) {
-      video.requestFullscreen().catch(err => console.warn('Fullscreen error:', err));
+      const activeVideo = [...document.querySelectorAll('video')]
+        .find(v => !v.paused && v.readyState >= 2) || video;
+      activeVideo.requestFullscreen().catch(err => console.warn('Fullscreen error:', err));
     } else {
       document.exitFullscreen();
     }
@@ -194,9 +196,10 @@ function bindControls(overlay, video) {
   const onFullscreenChange = () => {
     updateFsIcon();
     if (document.fullscreenElement) {
-      // Move o overlay para dentro do elemento fullscreen —
-      // é o único lugar onde position:fixed funciona corretamente em fullscreen
       const fsEl = document.fullscreenElement;
+      const fsVideo = fsEl.tagName === 'VIDEO' ? fsEl
+        : fsEl.querySelector('video') || video;
+      currentVideo = fsVideo;
       if (getComputedStyle(fsEl).position === 'static') {
         fsEl.style.position = 'relative';
       }
@@ -209,7 +212,6 @@ function bindControls(overlay, video) {
       overlay.classList.add('igvc-overlay--fullscreen');
       showOverlay(overlay);
     } else {
-      // Volta para o body com posicionamento fixed
       overlay.style.position = 'fixed';
       document.body.appendChild(overlay);
       overlay.classList.remove('igvc-overlay--fullscreen');
@@ -363,7 +365,9 @@ function handleKeyDown(e) {
       currentVideo.muted = !currentVideo.muted; break;
     case 'f': case 'F':
       if (!document.fullscreenElement) {
-        currentVideo.requestFullscreen().catch(err => console.warn('Fullscreen error:', err));
+        const activeVideo = [...document.querySelectorAll('video')]
+          .find(v => !v.paused && v.readyState >= 2) || currentVideo;
+        activeVideo.requestFullscreen().catch(err => console.warn('Fullscreen error:', err));
       } else {
         document.exitFullscreen();
       }
@@ -372,25 +376,31 @@ function handleKeyDown(e) {
 }
 
 function observeVideos() {
-  const observer = new MutationObserver(() => {
+  const intersectionObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting && entry.intersectionRatio > 0.5) {
+        attachOverlay(entry.target);
+      }
+    });
+  }, { threshold: 0.5 });
+
+  const mutationObserver = new MutationObserver(() => {
     document.querySelectorAll('video').forEach(video => {
       if (!video.dataset.igvcBound) {
         video.dataset.igvcBound = '1';
         video.addEventListener('mouseenter', () => attachOverlay(video));
-        const rect = video.getBoundingClientRect();
-        if (rect.width > 0) attachOverlay(video);
+        intersectionObserver.observe(video);
       }
     });
   });
 
-  observer.observe(document.body, { childList: true, subtree: true });
+  mutationObserver.observe(document.body, { childList: true, subtree: true });
 
   document.querySelectorAll('video').forEach(video => {
     if (!video.dataset.igvcBound) {
       video.dataset.igvcBound = '1';
       video.addEventListener('mouseenter', () => attachOverlay(video));
-      const rect = video.getBoundingClientRect();
-      if (rect.width > 0) attachOverlay(video);
+      intersectionObserver.observe(video);
     }
   });
 }

@@ -34,7 +34,14 @@ Extensão para Chrome/Edge que adiciona controles adicionais a vídeos do Instag
 
 ## Arquivos
 
-- `content.js` - lógica principal de injeção e controle de vídeos.
+- `src/` - content scripts (lógica de injeção e controle de vídeos):
+  - `constants.js`, `state.js`, `utils.js` - configurações, estado compartilhado e utilitários.
+  - `videos.js` - quais vídeos recebem controles.
+  - `audio.js` - um vídeo com som por vez e preferência de som do usuário.
+  - `actions.js` - ações sobre o vídeo (seek, play/pause, tela cheia).
+  - `overlay/` - criação, posicionamento, visibilidade e eventos do painel de controles.
+  - `input/` - mouse e atalhos de teclado.
+  - `main.js` - ponto de entrada.
 - `styles.css` - estilos do overlay e UI.
 - `manifest.json` - manifesto da extensão.
 - `popup.html` - popup padrão da extensão.
@@ -45,3 +52,7 @@ Extensão para Chrome/Edge que adiciona controles adicionais a vídeos do Instag
 - A extensão foi projetada para funcionar no Instagram web.
 - O comportamento de áudio e fullscreen pode variar de acordo com mudanças no site.
 - A extensão ainda está em desenvolvimento e pode precisar de ajustes para compatibilidade futura.
+
+## Possíveis melhorias
+
+- **Usar um bundler (esbuild ou Vite).** Hoje os arquivos de `src/` são scripts comuns, sem `import`/`export`: compartilham o escopo global e dependem da ordem em que estão listados no `manifest.json` (Chrome não carrega content scripts como módulos ES). Um bundler permitiria módulos de verdade, com dependências explícitas e erros detectados no build. O custo é um passo de build e carregar a pasta `dist/` no navegador em vez da pasta do projeto.

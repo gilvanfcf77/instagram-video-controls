@@ -56,8 +56,10 @@
   opacity: 1;
 }
 
-/* Vídeo fora da área visível do carrossel */
-.igvc-overlay--clipped {
+/* Vídeo fora da área visível do carrossel, ou coberto por uma janela do
+   Instagram (denúncia, compartilhar...) */
+.igvc-overlay--clipped,
+.igvc-overlay--covered {
   display: none;
 }
 
@@ -110,6 +112,63 @@
   font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.02em;
+}
+
+/* ── Volume (barra que abre à esquerda do botão de som) ───────────────────── */
+.igvc-volume {
+  position: relative;
+  display: flex;
+}
+
+/* Posicionado fora do fluxo para não alterar a coluna de botões. O
+   padding-right transparente liga a barra ao botão, mantendo o hover. */
+.igvc-volume-slider {
+  position: absolute;
+  right: 100%;
+  top: 50%;
+  transform: translateY(-50%);
+  padding-right: 8px;
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.15s ease, visibility 0.15s;
+}
+
+.igvc-volume:hover .igvc-volume-slider,
+.igvc-volume--dragging .igvc-volume-slider {
+  visibility: visible;
+  opacity: 1;
+  pointer-events: all;
+}
+
+.igvc-volume-pill {
+  display: flex;
+  align-items: center;
+  width: 110px;
+  height: 40px;
+  padding: 0 14px;
+  box-sizing: border-box;
+  border-radius: 20px;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+.igvc-volume-bar {
+  flex: 1;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.25);
+  border-radius: 3px;
+  cursor: pointer;
+  /* Área de clique maior que a barra visível */
+  background-clip: content-box;
+  padding: 8px 0;
+}
+
+.igvc-volume-fill {
+  height: 100%;
+  width: 0%;
+  background: #fff;
+  border-radius: 3px;
 }
 
 /* ── Progress bar ─────────────────────────────────────────────────────────── */

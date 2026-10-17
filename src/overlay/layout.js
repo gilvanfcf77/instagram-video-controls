@@ -41,10 +41,29 @@ function visibleWidthRatio(video, rect) {
   return Math.max(0, right - left) / rect.width;
 }
 
+// Uma janela do Instagram (denúncia, compartilhar, menu "...") está por cima do
+// vídeo. Nosso overlay tem z-index máximo e apareceria sobre ela. Amostra o
+// centro e a coluna de botões e vê se o elemento do topo (ignorando o overlay)
+// está num dialog que não contém o vídeo — o popup do próprio post contém.
+function isCoveredByDialog(video, rect) {
+  if (!rect.width || !rect.height) return false;
+  const points = [
+    [rect.left + rect.width / 2, rect.top + rect.height / 2],
+    [rect.right - 30, rect.top + rect.height * 0.4],
+    [rect.right - 30, rect.top + rect.height * 0.8],
+  ];
+  return points.some(([x, y]) => {
+    const top = document.elementsFromPoint(x, y).find(el => !el.closest('.igvc-overlay'));
+    const dialog = top && top.closest('[role="dialog"]');
+    return !!dialog && !dialog.contains(video);
+  });
+}
+
 function positionOverlay(overlay, video) {
   const rect = video.getBoundingClientRect();
   const fs = overlay.classList.contains('igvc-overlay--fullscreen');
   overlay.classList.toggle('igvc-overlay--clipped', !fs && visibleWidthRatio(video, rect) < 0.5);
+  overlay.classList.toggle('igvc-overlay--covered', !fs && isCoveredByDialog(video, rect));
   overlay.style.left   = rect.left + 'px';
   overlay.style.top    = rect.top  + 'px';
   overlay.style.width  = rect.width  + 'px';

@@ -41,7 +41,7 @@ function bindFullscreen(overlay, video, fsBtn, signal) {
   // na tela fica por nossa conta.
   overlay.addEventListener('click', (e) => {
     if (!overlay.classList.contains('igvc-overlay--fullscreen')) return;
-    if (e.target.closest('.igvc-btn, .igvc-progress-wrap')) return;
+    if (e.target.closest('.igvc-btn, .igvc-progress-wrap, .igvc-volume')) return;
     setAudioVideo(video);
     togglePlay(video);
     showSkipFeedback(overlay, video.paused ? '⏸' : '▶');

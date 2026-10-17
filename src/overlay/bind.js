@@ -15,7 +15,7 @@ function bindControls(overlay, video) {
     playBtn.querySelector('.igvc-icon').textContent = video.paused ? '▶' : '⏸';
   };
   const updateMuteIcon = () => {
-    muteBtn.querySelector('.igvc-icon').textContent = video.muted ? '🔇' : '🔊';
+    muteBtn.querySelector('.igvc-icon').textContent = isAudible(video) ? '🔊' : '🔇';
   };
 
   // Todos os listeners no vídeo/document usam este signal para serem
@@ -64,6 +64,7 @@ function bindControls(overlay, video) {
   fsBtn.addEventListener('pointerdown', handle(() => toggleFullscreen(video)));
 
   bindProgress(overlay, video, signal);
+  bindVolume(overlay, video, signal);
   bindFullscreen(overlay, video, fsBtn, signal);
 
   return () => ac.abort();

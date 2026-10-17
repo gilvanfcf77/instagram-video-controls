@@ -31,6 +31,17 @@ function createControls() {
   });
   overlay.appendChild(buttonRow);
 
+  // Botão de som + barra de volume que abre à esquerda dele no hover
+  const muteBtn = buttonRow.querySelector('#igvc-mute');
+  const volume = document.createElement('div');
+  volume.className = 'igvc-volume';
+  volume.innerHTML =
+    '<div class="igvc-volume-slider"><div class="igvc-volume-pill">' +
+      '<div class="igvc-volume-bar"><div class="igvc-volume-fill"></div></div>' +
+    '</div></div>';
+  muteBtn.replaceWith(volume);
+  volume.appendChild(muteBtn);
+
   const progressWrap = document.createElement('div');
   progressWrap.className = 'igvc-progress-wrap';
 

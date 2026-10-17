@@ -14,4 +14,6 @@ const state = {
   // vídeo entra em foco na tela (scroll, popup) ou quando o usuário usa os
   // controles/atalhos nele.
   audioVideo: null,
+  // Último volume > 0, para restaurar ao ligar o som de um vídeo com volume 0.
+  lastVolume: null,
 };

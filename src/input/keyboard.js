@@ -5,6 +5,8 @@ function handleKeyDown(e) {
   const video = state.currentVideo;
   if (!video) return;
   if (isEditableElement(document.activeElement)) return;
+  // Janela do Instagram por cima do vídeo: as teclas são dela
+  if (state.currentControls?.classList.contains('igvc-overlay--covered')) return;
 
   const flash = (text) => {
     const overlay = state.currentControls;

@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Instagram Video Controls",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Adiciona controles de vídeo ao Instagram: voltar, avançar, velocidade e mais.",
   "permissions": [],
   "content_scripts": [
@@ -18,6 +18,7 @@
         "src/overlay/layout.js",
         "src/overlay/visibility.js",
         "src/overlay/progress.js",
+        "src/overlay/volume.js",
         "src/overlay/fullscreen.js",
         "src/overlay/bind.js",
         "src/overlay/attach.js",

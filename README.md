@@ -1,65 +1,65 @@
 # Instagram Video Controls
 
-Extensão para Chrome/Edge que adiciona controles adicionais a vídeos do Instagram, incluindo:
+Chrome/Edge extension that adds extra controls to Instagram videos, including:
 
-- voltar/avançar em 5 segundos
-- pausar/play
-- botão de som com barra de volume (0 a 100)
-- alternar velocidade de reprodução
-- fullscreen customizado
-- barra de progresso e tempo de vídeo
+- seek back/forward by 5 seconds
+- pause/play
+- sound button with a volume bar (0 to 100)
+- playback speed toggle
+- custom fullscreen
+- progress bar and video time
 
-## Instalação
+## Installation
 
-1. Abra o navegador e acesse `chrome://extensions/` ou `edge://extensions/`.
-2. Ative o Modo de desenvolvedor.
-3. Clique em "Carregar sem compactação".
-4. Selecione a pasta `instagram-video-controls`.
+1. Open your browser and go to `chrome://extensions/` or `edge://extensions/`.
+2. Turn on Developer mode.
+3. Click "Load unpacked".
+4. Select the `instagram-video-controls` folder.
 
-## Uso
+## Usage
 
-- Os controles aparecem sobre o vídeo do Instagram quando o mouse está sobre ele, numa coluna à direita, com a barra de progresso embaixo.
-- O botão `⛶` alterna para fullscreen. Em fullscreen, clicar na tela pausa/retoma o vídeo.
-- O botão `🔊` ativa/desativa o som. Com o mouse sobre ele, abre uma barra de volume à esquerda; arrastar até 0 deixa o vídeo mudo.
-- O botão de velocidade alterna entre 0.5×, 0.75×, 1×, 1.25×, 1.5× e 2×.
-- Os controles somem quando uma janela do Instagram (denúncia, compartilhar, menu `...`) abre por cima do vídeo.
+- The controls appear over the Instagram video when the mouse is over it, in a column on the right, with the progress bar at the bottom.
+- The `⛶` button toggles fullscreen. In fullscreen, clicking the screen pauses/resumes the video.
+- The `🔊` button turns the sound on/off. With the mouse over it, a volume bar opens to its left; dragging it to 0 mutes the video.
+- The speed button cycles through 0.5×, 0.75×, 1×, 1.25×, 1.5× and 2×.
+- The controls disappear when an Instagram dialog (report, share, `...` menu) opens over the video.
 
-### Som
+### Sound
 
-- Só um vídeo toca com som por vez: o que está tocando e mais visível na tela.
-- O botão de som, a barra de volume, a tecla `M` e o botão de som nativo do Instagram definem a preferência de som, que passa a valer para os próximos vídeos.
-- Enquanto nenhuma preferência foi escolhida, a extensão não interfere no mute do Instagram.
+- Only one video plays with sound at a time: the one that is playing and most visible on screen.
+- The sound button, the volume bar, the `M` key and Instagram's native sound button set the sound preference, which then applies to the following videos.
+- Until a preference has been chosen, the extension does not interfere with Instagram's mute.
 
-## Atalhos de teclado
+## Keyboard shortcuts
 
-- `ArrowLeft` — retrocede 5 segundos no vídeo.
-- `ArrowRight` — avança 5 segundos no vídeo.
-- `M` — ativa/desativa o som do vídeo.
-- `F` — entra/sai do modo fullscreen.
+- `ArrowLeft` — seeks back 5 seconds in the video.
+- `ArrowRight` — seeks forward 5 seconds in the video.
+- `M` — turns the video's sound on/off.
+- `F` — enters/exits fullscreen mode.
 
-Os atalhos não funcionam enquanto você digita (comentários, busca) ou com uma janela do Instagram aberta por cima do vídeo.
+The shortcuts do not work while you are typing (comments, search) or when an Instagram dialog is open over the video.
 
-## Arquivos
+## Files
 
-- `src/` - content scripts (lógica de injeção e controle de vídeos):
-  - `constants.js`, `state.js`, `utils.js` - configurações, estado compartilhado e utilitários.
-  - `videos.js` - quais vídeos recebem controles.
-  - `audio.js` - um vídeo com som por vez e preferência de som do usuário.
-  - `actions.js` - ações sobre o vídeo (seek, play/pause, tela cheia).
-  - `overlay/` - criação, posicionamento, visibilidade e eventos do painel de controles (incluindo barra de progresso, volume e fullscreen).
-  - `input/` - mouse e atalhos de teclado.
-  - `main.js` - ponto de entrada.
-- `styles.css` - estilos do overlay e UI.
-- `manifest.json` - manifesto da extensão.
-- `popup.html` - popup padrão da extensão.
-- `icons/` - ícones da extensão.
+- `src/` - content scripts (video injection and control logic):
+  - `constants.js`, `state.js`, `utils.js` - settings, shared state and utilities.
+  - `videos.js` - which videos get controls.
+  - `audio.js` - one video with sound at a time and the user's sound preference.
+  - `actions.js` - actions on the video (seek, play/pause, fullscreen).
+  - `overlay/` - creation, positioning, visibility and events of the control panel (including the progress bar, volume and fullscreen).
+  - `input/` - mouse and keyboard shortcuts.
+  - `main.js` - entry point.
+- `styles.css` - overlay and UI styles.
+- `manifest.json` - extension manifest.
+- `popup.html` - the extension's default popup.
+- `icons/` - extension icons.
 
-## Notas
+## Notes
 
-- A extensão foi projetada para funcionar no Instagram web.
-- O comportamento de áudio e fullscreen pode variar de acordo com mudanças no site.
-- A extensão ainda está em desenvolvimento e pode precisar de ajustes para compatibilidade futura.
+- The extension was designed to work on Instagram web.
+- Audio and fullscreen behavior may vary as the site changes.
+- The extension is still in development and may need adjustments for future compatibility.
 
-## Possíveis melhorias
+## Possible improvements
 
-- **Usar um bundler (esbuild ou Vite).** Hoje os arquivos de `src/` são scripts comuns, sem `import`/`export`: compartilham o escopo global e dependem da ordem em que estão listados no `manifest.json` (Chrome não carrega content scripts como módulos ES). Um bundler permitiria módulos de verdade, com dependências explícitas e erros detectados no build. O custo é um passo de build e carregar a pasta `dist/` no navegador em vez da pasta do projeto.
+- **Use a bundler (esbuild or Vite).** Today the files in `src/` are plain scripts, with no `import`/`export`: they share the global scope and depend on the order in which they are listed in `manifest.json` (Chrome does not load content scripts as ES modules). A bundler would allow real modules, with explicit dependencies and errors caught at build time. The cost is a build step and loading the `dist/` folder in the browser instead of the project folder.
